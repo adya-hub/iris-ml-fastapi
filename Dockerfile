@@ -19,3 +19,5 @@ EXPOSE 8000
 
 # Step 7: Command to run FastAPI app
 CMD ["uvicorn", "iris_api:app", "--host", "0.0.0.0", "--port", "8000"]
+
+COPY templates ./templates
