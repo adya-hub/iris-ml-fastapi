@@ -6,6 +6,7 @@ import logging
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+# Initialize FastAPI app
 app = FastAPI()
 
 # Load saved model
@@ -22,7 +23,7 @@ class IrisInput(BaseModel):
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# HTML template setup
+# HTML template setup (templates folder must exist and contain index.html)
 templates = Jinja2Templates(directory="templates")
 
 # Root - serve HTML page
@@ -34,13 +35,19 @@ def home(request: Request):
 @app.post("/predict")
 def predict(data: IrisInput):
     logger.info(f"Received input: {data.dict()}")
+
+    # Convert input into numpy array
     input_data = np.array([[data.sepal_length, data.sepal_width, data.petal_length, data.petal_width]])
+    
+    # Model prediction
     prediction = model.predict(input_data)[0]
     labels = ['setosa', 'versicolor', 'virginica']
-    logger.info(f"Prediction result: {labels[prediction]}")
-    return {"prediction": labels[prediction]}
+    result = labels[prediction]
 
-# Status endpoint
+    logger.info(f"Prediction result: {result}")
+    return {"prediction": result}
+
+# Status endpoint (for health check)
 @app.get("/status")
 def status():
     return {"status": "API is running", "uptime": "healthy"}
