@@ -10,14 +10,11 @@ COPY requirements.txt .
 # Step 4: Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Step 5: Copy the rest of the files
-COPY iris_api.py .
-COPY iris_model.pkl .
+# Step 5: Copy all project files (code + templates + model)
+COPY . .
 
 # Step 6: Expose the FastAPI port
 EXPOSE 8000
 
 # Step 7: Command to run FastAPI app
 CMD ["uvicorn", "iris_api:app", "--host", "0.0.0.0", "--port", "8000"]
-
-COPY templates ./templates
